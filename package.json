@@ -1,0 +1,25 @@
+{
+  "name": "try",
+  "version": "1.0.0",
+  "description": "",
+  "main": "js/app.js",
+  "scripts": {
+    "dev": "webpack-dev-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^5.8.24",
+    "babel-loader": "^5.3.2",
+    "css-loader": "^0.18.0",
+    "jscs": "^2.1.1",
+    "jscs-loader": "^0.2.0",
+    "less": "^2.5.1",
+    "less-loader": "^2.2.0",
+    "pixi": "^0.3.1",
+    "style-loader": "^0.12.3",
+    "webpack": "^1.12.1",
+    "webpack-dev-server": "^1.10.1"
+  }
+}

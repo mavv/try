@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/3.0.7/pixi.min.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="bundle.js" charset="utf-8"></script>
+
+    <script type="text/javascript">
+
+
+        var canvasH = 480,
+            canvasW = 960,
+
+            renderer = PIXI.autoDetectRenderer(canvasW, canvasH),
+            stage = new PIXI.Container(),
+            substageA = new PIXI.Container();
+
+        document.body.appendChild(renderer.view);
+
+        var cutMask = function () {
+            var mask = new PIXI.Graphics()
+            mask.beginFill();
+            mask.drawPolygon(
+                0, canvasH/5,
+                canvasW, (2*canvasH)/5,
+                canvasW, (4*canvasH)/5,
+                0, (3*canvasH)/5
+            );
+            mask.endFill();
+
+            return mask;
+        };
+
+        var myMask = cutMask();
+
+        function setupAnimate() {
+            var spriteA = PIXI.Sprite.fromImage('aiweiwei.jpg'),
+                spriteB = PIXI.Sprite.fromImage('aiweiwei.jpg');
+
+            stage.addChild(substageA);
+
+            spriteA.anchor.set(0.5);
+            spriteA.position.set(0.5);
+            spriteA.scale.set(0.5);
+
+
+            spriteB.anchor.set(0.5);
+            spriteB.position.set(0.5);
+
+            substageA.addChild(spriteA);
+            substageA.addChild(spriteB);
+            stage.addChild(myMask);
+        }
+
+        function animationLoop() {
+
+            myMask.scale.x *= 1.009;
+			myMask.scale.y *= 1.009;
+
+            requestAnimationFrame(animationLoop);
+            renderer.render(stage);
+        }
+
+        animationLoop();
+
+        PIXI
+            .loader
+            .add(['aiweiwei.jpg'])
+            .load(setupAnimate);
+    </script>
+  </body>
+</html>
