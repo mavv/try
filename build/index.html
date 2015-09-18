@@ -14,17 +14,28 @@
 
             renderer = PIXI.autoDetectRenderer(canvasW, canvasH),
             stage = new PIXI.Container(),
-            substageA = new PIXI.Container();
+            substageA = new PIXI.Container(),
+            spriteA = PIXI.Sprite.fromImage('aiweiwei.jpg', canvasW, canvasH),
+            spriteB = PIXI.Sprite.fromImage('aiweiwei.jpg', canvasW, canvasH),
+            spriteC = PIXI.extras.TilingSprite.fromImage('aiweiwei.jpg', canvasW, canvasH), // bg sprite
+            spriteD = PIXI.extras.TilingSprite.fromImage('aiweiwei.jpg', canvasW, canvasH); // top sprite
 
         document.body.appendChild(renderer.view);
+
+
+
+        requestAnimationFrame(animationLoop);
+        function loadProgressHandler(loader, resource) {
+            console.log('loading: ' + resource.url + ' progress: ' + loader.progress + '%');
+        }
 
         var cutMask = function () {
             var mask = new PIXI.Graphics()
             mask.beginFill();
             mask.drawPolygon(
                 0, canvasH/5,
-                canvasW, (2*canvasH)/5,
-                canvasW, (4*canvasH)/5,
+                canvasW, (1.5*canvasH)/5,
+                canvasW, (3.5*canvasH)/5,
                 0, (3*canvasH)/5
             );
             mask.endFill();
@@ -32,41 +43,58 @@
             return mask;
         };
 
-        var myMask = cutMask();
+        // var myMask = cutMask();
 
         function setupAnimate() {
-            var spriteA = PIXI.Sprite.fromImage('aiweiwei.jpg'),
-                spriteB = PIXI.Sprite.fromImage('aiweiwei.jpg');
+
+            // spriteA.position.set(renderer.width/2, renderer.height/2);
+            // spriteA.scale.set(0.3);
+
+            console.log(spriteA);
+
+            spriteC.anchor.set(0.0);
+            spriteC.scale.set(1.0);
+            spriteC.alpha = 0.33;
+
+            spriteD.anchor.set(0.0);
+            spriteD.scale.set(1.0);
+            spriteD.alpha = 0.11;
+
+            // stage.addChild(substageA);
+
+
+            // spriteB.position.set(0.5);
+            // spriteB.scale.set(0.3);
+            // spriteB.mask = myMask;
+
+
+            // substageA.addChild(spriteB);
+            // stage.addChild(spriteB);
+            stage.addChild(spriteA);
+
+            substageA.pivot.set(0.5);
+            substageA.addChild(spriteD);
+            substageA.addChild(spriteC);
+
 
             stage.addChild(substageA);
 
-            spriteA.anchor.set(0.5);
-            spriteA.position.set(0.5);
-            spriteA.scale.set(0.5);
-
-
-            spriteB.anchor.set(0.5);
-            spriteB.position.set(0.5);
-
-            substageA.addChild(spriteA);
-            substageA.addChild(spriteB);
-            stage.addChild(myMask);
+            spriteD.mask = spriteA;
         }
 
         function animationLoop() {
-
-            myMask.scale.x *= 1.009;
-			myMask.scale.y *= 1.009;
+            spriteC.tilePosition.x += 1;
+            spriteD.tilePosition.x -= 1;
 
             requestAnimationFrame(animationLoop);
             renderer.render(stage);
-        }
 
-        animationLoop();
+        }
 
         PIXI
             .loader
             .add(['aiweiwei.jpg'])
+            .on('progress', loadProgressHandler)
             .load(setupAnimate);
     </script>
   </body>
