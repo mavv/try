@@ -15,10 +15,14 @@
             renderer = PIXI.autoDetectRenderer(canvasW, canvasH),
             stage = new PIXI.Container(),
             substageA = new PIXI.Container(),
+            substageB = new PIXI.Container(),
             spriteA = PIXI.Sprite.fromImage('aiweiwei.jpg', canvasW, canvasH),
             spriteB = PIXI.Sprite.fromImage('aiweiwei.jpg', canvasW, canvasH),
-            spriteC = PIXI.extras.TilingSprite.fromImage('aiweiwei.jpg', canvasW, canvasH), // bg sprite
-            spriteD = PIXI.extras.TilingSprite.fromImage('aiweiwei.jpg', canvasW, canvasH); // top sprite
+            spriteC = PIXI.Sprite.fromImage('aiweiwei.jpg', canvasW, canvasH), // bg sprite
+            spriteD = PIXI.extras.TilingSprite.fromImage('aiweiwei.jpg', canvasW, canvasH),
+            fraction = 10,
+            count = 0,
+            filter = new PIXI.filters.ColorMatrixFilter(); // top sprite
 
         document.body.appendChild(renderer.view);
 
@@ -30,61 +34,104 @@
         }
 
         var cutMask = function () {
-            var mask = new PIXI.Graphics()
+            var mask = new PIXI.Graphics();
             mask.beginFill();
             mask.drawPolygon(
-                0, canvasH/5,
-                canvasW, (1.5*canvasH)/5,
-                canvasW, (3.5*canvasH)/5,
-                0, (3*canvasH)/5
+                0, 1.5 * canvasH / fraction ,
+                canvasW, (3.5 * canvasH) / fraction,
+                canvasW, (9 * canvasH) / fraction,
+                0, (7.5 * canvasH) / fraction
             );
             mask.endFill();
 
             return mask;
         };
 
-        // var myMask = cutMask();
+        var myMask = cutMask(),
+            myMask2 = cutMask();
 
         function setupAnimate() {
 
-            // spriteA.position.set(renderer.width/2, renderer.height/2);
-            // spriteA.scale.set(0.3);
-
-            console.log(spriteA);
-
-            spriteC.anchor.set(0.0);
-            spriteC.scale.set(1.0);
-            spriteC.alpha = 0.33;
-
-            spriteD.anchor.set(0.0);
-            spriteD.scale.set(1.0);
-            spriteD.alpha = 0.11;
-
-            // stage.addChild(substageA);
 
 
-            // spriteB.position.set(0.5);
-            // spriteB.scale.set(0.3);
-            // spriteB.mask = myMask;
-
-
-            // substageA.addChild(spriteB);
-            // stage.addChild(spriteB);
+            spriteA.anchor.set(0.5);
+            spriteA.position.set(renderer.width / 2, renderer.height / 2);
+            spriteA.scale.set(0.3);
             stage.addChild(spriteA);
 
-            substageA.pivot.set(0.5);
-            substageA.addChild(spriteD);
-            substageA.addChild(spriteC);
+            spriteB.anchor.set(0.5);
+            spriteB.position.set(renderer.width / 2, renderer.height / 2);
+            spriteB.scale.set(0.35);
+            stage.addChild(spriteB)
+
+            spriteC.anchor.set(0.5);
+            spriteC.position.set(renderer.width / 2, renderer.height / 2);
+            spriteC.scale.set(0.35);
+            stage.addChild(spriteC);
+
+            // spriteD.scale.set(1);
+            // spriteD.tileScale.set(.4);
+            // spriteD.position.set(renderer.width / 2, renderer.height / 2);
+            // spriteD.anchor.set(0.5);
+            // substageA.addChild(spriteD);
+
+            stage.addChild(myMask);
+            spriteB.mask = myMask;
+            spriteC.mask = myMask2;
+            stage.addChild(myMask2);
+            console.log(spriteB);
+
+            // substageA.addChild(myMask);
+            // substageA.addChild(spriteD);
 
 
-            stage.addChild(substageA);
+            // substageA.filters = [filter];
 
-            spriteD.mask = spriteA;
         }
 
         function animationLoop() {
-            spriteC.tilePosition.x += 1;
-            spriteD.tilePosition.x -= 1;
+
+            fraction -= 0.25;
+            count += 0.005;
+
+            // spriteD.tilePosition.x += 1;
+            // spriteD.tilePosition.y += 1;
+
+            // myMask.clear();
+            // myMask.beginFill();
+            // myMask.drawPolygon(
+            //     0, canvasH / fraction,
+            //     canvasW, (2.5 * canvasH) / fraction,
+            //     canvasW, (9 * canvasH) / fraction,
+            //     0, (7.5 * canvasH) / fraction
+            // );
+            // myMask.endFill();
+            myMask.position.y += 0.8;
+            myMask2.position.y -= 0.5;
+
+            // substageB.position.y += 0.25;
+            // substageB.position.x -= 0.25;
+            // spriteB.x += 12;
+            // spriteB.y += 12;
+
+            // substageA.position.set(0);
+            // substageA.y -= 1;
+
+
+            // substageA.scale.x *= 1.0023;
+            // substageA.scale.y *= 1.0055;
+
+            // filter.matrix = [];
+            // var matrix = filter.matrix;
+            // substageA.filters = [filter];
+            //
+            //
+            // matrix[1] = Math.sin(count) * 3;
+            // matrix[2] = Math.cos(count);
+            // matrix[3] = Math.cos(count) * 1.5;
+            // matrix[4] = Math.sin(count / 3) * 2;
+            // matrix[5] = Math.sin(count / 2);
+            // matrix[6] = Math.sin(count / 4);
 
             requestAnimationFrame(animationLoop);
             renderer.render(stage);
